@@ -1,0 +1,29 @@
+# practical_2b_rbfs.py
+graph = {
+    'A': {'B': 75, 'C': 118, 'D': 140}, 'B': {'A': 75, 'E': 71},
+    'C': {'A': 118, 'F': 111}, 'D': {'A': 140, 'E': 151, 'G': 99, 'H': 80},
+    'E': {'B': 71, 'D': 151}, 'F': {'C': 111, 'I': 70},
+    'G': {'D': 99, 'J': 211}, 'H': {'D': 80, 'K': 146, 'L': 97},
+    'I': {'F': 70, 'M': 75}, 'M': {'I': 75, 'K': 120},
+    'K': {'M': 120, 'H': 146, 'L': 138}, 'L': {'H': 97, 'K': 138, 'J': 101},
+    'J': {'G': 211, 'L': 101}
+}
+hn = {'A': 366, 'B': 374, 'C': 329, 'D': 253, 'E': 380, 'F': 244, 'G': 176,
+      'H': 193, 'I': 241, 'M': 242, 'K': 160, 'L': 100, 'J': 0}
+
+def rbfs(curr, goal, path):
+    if curr == goal: return path
+    for loc in sorted(graph[curr], key=lambda l: graph[curr][l] + hn[l]):
+        res = rbfs(loc, goal, path + [loc])
+        if res: return res
+    return None
+
+def search(start, goal):
+    res = rbfs(start, goal, [start])
+    if res:
+        cost = sum(graph[res[i]][res[i+1]] for i in range(len(res)-1))
+        print("Path:", res, "Cost:", cost)
+    else:
+        print("Path not found!")
+
+search('A', 'J')
